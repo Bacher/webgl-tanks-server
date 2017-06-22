@@ -3,6 +3,13 @@ class Player {
 
     constructor(game, connection) {
         this.g = game;
+
+        this.input = {
+            acceleration:  0,
+            direction:     0,
+            viewDirection: 0,
+        };
+
         this._connection = connection;
 
         this._connection.on('message', message => {
@@ -12,7 +19,6 @@ class Player {
 
             const msg = JSON.parse(message.utf8Data);
 
-            console.log('receive:', msg.type);
             this._handleMessage(msg.type, msg.data);
         });
     }
@@ -25,6 +31,10 @@ class Player {
                 this.g.joinPlayer(this);
                 break;
             }
+            case 'input': {
+                this.input = data;
+                break;
+            }
         }
     }
 
@@ -33,7 +43,6 @@ class Player {
             type,
             data,
         }));
-        console.log('send:   ', type);
     }
 
     sendRaw(json) {

@@ -22,7 +22,7 @@ class Game {
             this._time += delta;
             this._tick(delta);
             this._lastTs = now;
-        }, 1000 / 300);
+        }, 1000 / 30);
     }
 
     joinPlayer(player) {
@@ -47,8 +47,8 @@ class Game {
 
     _generateRandomPosition() {
         return {
-            x: 200 * Math.random() - 100,
-            y: 200 * Math.random() - 100,
+            x: 100 * Math.random() - 50,
+            y: 100 * Math.random() - 50,
         };
     }
 
@@ -56,7 +56,7 @@ class Game {
         let id;
 
         do {
-            id = String(Math.random()).substr(2, 8);
+            id = Math.round(Math.random() * 1000000000);
         } while (this._ids.has(id));
 
         this._ids.add(id);
@@ -68,12 +68,14 @@ class Game {
         const tanks = [];
 
         for (let { tank, player } of this._tanks) {
-            // TODO LOGIC
+            tank.applyTickChanges(delta, player.input);
 
             tanks.push({
-                id:   tank.id,
-                name: player.name,
-                pos:  tank.position,
+                id:     tank.id,
+                name:   player.name,
+                pos:    tank.position,
+                dir:    tank.direction,
+                turDir: tank.turretDirection,
             });
         }
 
